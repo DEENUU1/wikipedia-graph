@@ -38,9 +38,9 @@ def crawl_and_create_graph(starting_url: str) -> nx.Graph:
 
     url_queue = [starting_url]
 
-    count = 0  # Count the number of pages crawled
+    count = 0
 
-    while url_queue and count < 100:
+    while url_queue and count < 5:
         current_url = url_queue.pop(0)
 
         count += 1
@@ -55,7 +55,6 @@ def crawl_and_create_graph(starting_url: str) -> nx.Graph:
                 graph.add_edge(current_url, link)
                 url_queue.append(link)
 
-    # Save the graph to a file
     with open("wikipedia_daredevil_graph.pkl", "wb") as f:
         pickle.dump(graph, f)
 
@@ -63,17 +62,14 @@ def crawl_and_create_graph(starting_url: str) -> nx.Graph:
 
 
 if __name__ == "__main__":
-    # starting_url = "https://pl.wikipedia.org/wiki/Daredevil_(serial_telewizyjny)"
-    #
-    # graph = crawl_and_create_graph(starting_url)
+    starting_url = "https://pl.wikipedia.org/wiki/Daredevil_(serial_telewizyjny)"
 
-    # Load the saved graph from the file
+    graph = crawl_and_create_graph(starting_url)
+
     with open("wikipedia_daredevil_graph.pkl", "rb") as f:
         saved_graph = pickle.load(f)
 
-    # Visualize the saved graph
     vis_net = Network(notebook=True)
     vis_net.from_nx(saved_graph)
-    # vis_net.toggle_physics(False)
     vis_net.show_buttons(filter_=["physics"])
     vis_net.show("Wikipedia_Daredevil_Link_Graph.html")
